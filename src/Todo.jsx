@@ -9,8 +9,25 @@ const Todo = () => {
    
   const [todos,setTodos] = useState([]);
   const inputRef = useRef(null); 
+  const [loaded, setLoaded] = useState(false); 
+
+ 
+useEffect(() => {
+  const savedTodos = localStorage.getItem("todos");
+  if (savedTodos) {
+    setTodos(JSON.parse(savedTodos));
+  }
+  setLoaded(true); 
+}, []);
+
+
+useEffect(() => {
+  if (!loaded) return; 
+  localStorage.setItem("todos", JSON.stringify(todos));
+}, [todos, loaded]);
 
   const add = function(){
+     if (inputRef.current.value.trim() === "") return;
      setTodos([...todos,{no:count++,text:inputRef.current.value,display:""}]);
      inputRef.current.value = "";
   }
